@@ -1,0 +1,33 @@
+GET http://localhost:3000
+
+### Fetch All Users
+GET http://localhost:3000/auth/all
+
+### Register
+POST http://localhost:3000/auth/register    
+
+### Login
+POST http://localhost:3000/auth/login    
+
+### Refresh token
+POST http://localhost:3000/auth/refresh-token    
+
+### logout
+DELETE http://localhost:3000/auth/logout        
+
+###
+GET http://localhost:3000/students/all
+
+### 
+POST http://localhost:3000/students/newStudent
+Content-Type: application/json
+
+{
+    "fname": "Mayuresh",
+    "lname": "Gavai",
+    "phone": "678-412-2345",
+    "address": "ABC Cedar Street, Dubai",
+    "course": "Computer Engineering",
+    "div": "C",
+    "acad_year": 2022
+}
