@@ -1,5 +1,5 @@
 import express from 'express'
-import { fetchAllUsers } from '../controller/auth.controller.js'
+import { addUser, fetchAllUsers } from '../controller/auth.controller.js'
 
 const router = express.Router()
 
@@ -9,6 +9,7 @@ const router = express.Router()
 
 router.get('/all',fetchAllUsers)
 
+router.post('/adduser',addUser)
 
 router.post('/register',async(req,res,next)=>{
     res.send('register route')

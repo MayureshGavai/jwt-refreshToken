@@ -3,6 +3,17 @@ GET http://localhost:3000
 ### Fetch All Users
 GET http://localhost:3000/auth/all
 
+### Add New User
+POST http://localhost:3000/auth/adduser
+Content-Type: application/json
+
+{
+    "username" : "john_doe",
+    "email" : "john.doe@example.com",
+    "password" : "johndoe"
+}
+
+
 ### Register
 POST http://localhost:3000/auth/register    
 
