@@ -1,4 +1,6 @@
 import { sql, poolConnect } from '../config/db.js';
+import bcrypt from 'bcryptjs'
+import { signAccessToken } from '../utils/jwt.js';
 
 export const getAllUsers = async () => {
     try {
@@ -42,5 +44,37 @@ export const addNewUser = async (user) => {
     } catch (err) {
         console.error('Database query error:', err)
         throw err
+    }
+}
+
+
+export const loginNewUser = async(username, password) => {
+    try {
+        const pool = await poolConnect;
+
+        const result = await pool.request()
+            .input('username', sql.NVarChar, username)
+            .query('SELECT * FROM Users WHERE username = @username');
+
+        if (result.recordset.length === 0) {
+            throw new Error('User not found');
+        }
+
+        const user = result.recordset[0];
+        console.log('User found:', user);
+
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+
+        if (!isPasswordValid) {
+            throw new Error('Invalid password');
+        }
+
+        const token = await signAccessToken(user.username);
+
+        return { token };
+
+    } catch (err) {
+        console.error('Database query error:', err);
+        throw err;
     }
 }

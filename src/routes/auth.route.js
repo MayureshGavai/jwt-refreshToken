@@ -1,5 +1,5 @@
 import express from 'express'
-import { addUser, fetchAllUsers } from '../controller/auth.controller.js'
+import { addUser, fetchAllUsers, loginUser } from '../controller/auth.controller.js'
 
 const router = express.Router()
 
@@ -11,13 +11,8 @@ router.get('/all',fetchAllUsers)
 
 router.post('/adduser',addUser)
 
-router.post('/register',async(req,res,next)=>{
-    res.send('register route')
-})
 
-router.post('/login',async(req,res,next)=>{
-    res.send('login route')
-})
+router.post('/login',loginUser)
 
 router.post('/refresh-token',async(req,res,next)=>{
     res.send('refresh token route')

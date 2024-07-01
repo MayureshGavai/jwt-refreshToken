@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs'
-import { addNewUser, getAllUsers } from "../model/auth.model.js";
+import { addNewUser, getAllUsers, loginNewUser } from "../model/auth.model.js";
 import { signAccessToken } from '../utils/jwt.js';
 
 export const fetchAllUsers = async (req, res) => {
@@ -36,7 +36,18 @@ export const addUser = async (req,res,next) => {
 
 export const loginUser = async (req,res,next) => {
     try{
+        const username = req.body.username
+        const password = req.body.password
         
+
+        if (!username || !password) {
+            return res.status(400).send('Email and password are required');
+        }
+
+         const { token } = await loginNewUser(username, password);
+
+        res.send({ "accessToken" : token });
+
     }catch(err){
         res.status(500).json({error : 'Failed to login user'})
     }
