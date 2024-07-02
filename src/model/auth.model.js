@@ -1,6 +1,6 @@
 import { sql, poolConnect } from '../config/db.js';
 import bcrypt from 'bcryptjs'
-import { signAccessToken } from '../utils/jwt.js';
+import { signAccessToken, signRefreshToken } from '../utils/generateToken.js';
 
 export const getAllUsers = async () => {
     try {
@@ -61,7 +61,6 @@ export const loginNewUser = async(username, password) => {
         }
 
         const user = result.recordset[0];
-        console.log('User found:', user);
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
 
@@ -69,12 +68,15 @@ export const loginNewUser = async(username, password) => {
             throw new Error('Invalid password');
         }
 
-        const token = await signAccessToken(user.username);
 
-        return { token };
+        const accessToken = await signAccessToken(user.username);
+
+        const refreshToken = await signRefreshToken(user.username);
+
+        return { accessToken, refreshToken };
 
     } catch (err) {
-        console.error('Database query error:', err);
+        console.error('Error in loginNewUser:', err);
         throw err;
     }
 }

@@ -1,4 +1,5 @@
 GET http://localhost:3000
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoibWF5dXJlc2giLCJpYXQiOjE3MTk5MTEyNjksImV4cCI6MTcxOTkxMTMyOX0.BtZI8PjBDEO9geLcBqZM1IpPrAK5mp1DJuA9nr3WCXY
 
 ### Fetch All Users
 GET http://localhost:3000/auth/all
@@ -14,8 +15,24 @@ Content-Type: application/json
 }
 
 
-### Register
-POST http://localhost:3000/auth/register    
+### Login User
+POST http://localhost:3000/auth/login 
+Content-Type: application/json
+
+{
+    "username" : "mayuresh",
+    "password" : "mayuresh"
+}
+
+### Generate Access Token 
+POST http://localhost:3000/auth/refreshtoken
+Content-Type: application/json
+
+{
+    "refreshToken" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoibWF5dXJlc2giLCJpYXQiOjE3MTk5MDcxNDUsImV4cCI6MTcyMjQ5OTE0NX0.zYkjCdM0MW3icjlehy_hreEBp29-PHCMeA9xbqOgL0I"
+}
+
+
 
 ### Login
 POST http://localhost:3000/auth/login    

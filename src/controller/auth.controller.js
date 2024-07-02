@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs'
 import { addNewUser, getAllUsers, loginNewUser } from "../model/auth.model.js";
-import { signAccessToken } from '../utils/jwt.js';
+import { verifyRefreshToken } from '../middleware/auth.middleware.js';
+import { signAccessToken, signRefreshToken } from '../utils/generateToken.js';
 
 export const fetchAllUsers = async (req, res) => {
     try {
@@ -23,8 +24,6 @@ export const addUser = async (req,res,next) => {
             email : req.body.email,
             password : hashedPassword
         }
-        // const token = await signAccessToken(user.email)
-        // res.send({token})
         const rowAffected = await addNewUser(user)
         res.status(201).json({message : 'User added successfully', rowAffected })
 
@@ -35,20 +34,41 @@ export const addUser = async (req,res,next) => {
 
 
 export const loginUser = async (req,res,next) => {
-    try{
-        const username = req.body.username
-        const password = req.body.password
-        
+    try {
+        const username = req.body.username;
+        const password = req.body.password;
 
         if (!username || !password) {
             return res.status(400).send('Email and password are required');
         }
 
-         const { token } = await loginNewUser(username, password);
+        const { accessToken, refreshToken } = await loginNewUser(username, password);
 
-        res.send({ "accessToken" : token });
+        console.log('Tokens generated:', { accessToken, refreshToken });
+
+        res.send({ accessToken, refreshToken });
+    } catch (err) {
+        console.error('Error in loginUser:', err);
+        res.status(500).json({ error: 'Failed to login user' });
+    }
+}
+
+export const generateRefreshToken = async(req,res,next) => {
+    try{
+        const { refreshToken } = req.body;
+        console.log(refreshToken)
+        if (!refreshToken) {
+            return res.status(400).send('Bad Request: Refresh Token is required');
+        }
+
+        const username = await verifyRefreshToken(refreshToken);
+        const newAccessToken = await signAccessToken(username);
+        const newRefreshToken = await signRefreshToken(username);
+
+        res.send({ newAccessToken, newRefreshToken });
 
     }catch(err){
-        res.status(500).json({error : 'Failed to login user'})
+        console.log(err)
+        res.status(500).json({error : 'Failed to create refresh token'})
     }
 }
