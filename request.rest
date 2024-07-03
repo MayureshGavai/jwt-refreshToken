@@ -1,6 +1,5 @@
 GET http://localhost:3000
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoibWF5dXJlc2giLCJpYXQiOjE3MTk5MTEyNjksImV4cCI6MTcxOTkxMTMyOX0.BtZI8PjBDEO9geLcBqZM1IpPrAK5mp1DJuA9nr3WCXY
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoibWF5dXJlc2giLCJpYXQiOjE3MjAwMDcyODYsImV4cCI6MTcyMDAwODE4Nn0.Ccup_pCjRgnBbevvzdmt0ET4uuGnF5UTVyn6youRO4Y
 ### Fetch All Users
 GET http://localhost:3000/auth/all
 
@@ -29,7 +28,7 @@ POST http://localhost:3000/auth/refreshtoken
 Content-Type: application/json
 
 {
-    "refreshToken" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoibWF5dXJlc2giLCJpYXQiOjE3MTk5MDcxNDUsImV4cCI6MTcyMjQ5OTE0NX0.zYkjCdM0MW3icjlehy_hreEBp29-PHCMeA9xbqOgL0I"
+    "refreshToken" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoibWF5dXJlc2giLCJpYXQiOjE3MjAwMDgwOTYsImV4cCI6MTcyMTMwNDA5Nn0.mZOCEXxrFBqc7sKbP8Ed_QXi6dygqwR4BaAletwAEYo"
 }
 
 
