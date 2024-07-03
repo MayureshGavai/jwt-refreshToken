@@ -13,7 +13,7 @@ export const fetchAllUsers = async (req, res) => {
 }
 
 
-export const addUser = async (req,res,next) => {
+export const addUser = async (req,res) => {
     try{
         const password = req.body.password
         const salt = await bcrypt.genSalt(10)
@@ -33,7 +33,7 @@ export const addUser = async (req,res,next) => {
 }
 
 
-export const loginUser = async (req,res,next) => {
+export const loginUser = async (req,res) => {
     try {
         const username = req.body.username;
         const password = req.body.password;
@@ -53,7 +53,7 @@ export const loginUser = async (req,res,next) => {
     }
 }
 
-export const generateRefreshToken = async(req,res,next) => {
+export const generateRefreshToken = async(req,res) => {
     try{
         const { refreshToken } = req.body;
         console.log(refreshToken)
