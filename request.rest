@@ -1,5 +1,6 @@
 GET http://localhost:3000
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoibWF5dXJlc2giLCJpYXQiOjE3MjAwMDcyODYsImV4cCI6MTcyMDAwODE4Nn0.Ccup_pCjRgnBbevvzdmt0ET4uuGnF5UTVyn6youRO4Y
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoibWF5dXJlc2giLCJpYXQiOjE3MjAwMTAxNzEsImV4cCI6MTcyMDAxMTA3MX0.DheoSoE81lmCli7EutdmnjwqkyG2HSx5LseUvoGG8TU
+
 ### Fetch All Users
 GET http://localhost:3000/auth/all
 
@@ -28,10 +29,16 @@ POST http://localhost:3000/auth/refreshtoken
 Content-Type: application/json
 
 {
-    "refreshToken" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoibWF5dXJlc2giLCJpYXQiOjE3MjAwMDgwOTYsImV4cCI6MTcyMTMwNDA5Nn0.mZOCEXxrFBqc7sKbP8Ed_QXi6dygqwR4BaAletwAEYo"
+    "refreshToken" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoibWF5dXJlc2giLCJpYXQiOjE3MjAwMTA4NDIsImV4cCI6MTcyMTMwNjg0Mn0.BHXgxjG2itcsWLmWTcTLjYJm6nMiNAp7RDhrvaTj4WE"
 }
 
+### Logout User
+DELETE http://localhost:3000/auth/logout        
+Content-Type : application/json
 
+{
+    "refreshToken" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoibWF5dXJlc2giLCJpYXQiOjE3MjAwMTA5NzAsImV4cCI6MTcyMTMwNjk3MH0.GjKaBwXXfNv4ayvjThe4g76CEpylaU6WWlNpiFGu2y8"
+}
 
 ### Login
 POST http://localhost:3000/auth/login    
