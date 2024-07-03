@@ -27,27 +27,27 @@ export const verifyAccessToken = (req, res, next) => {
 
 export const verifyRefreshToken = (refreshToken) => {
 
-    console.log("refreshToken : ",refreshToken)
+    // console.log("refreshToken : ",refreshToken)
 
     if (!refreshToken) {
         return res.status(400).send('Refresh Token is required');
     }
 
     return new Promise((resolve, reject) => {
-        JWT.verify(refreshToken, process.env.REFRESH_SECRET_KEY, (err, payload) => {
+        JWT.verify(refreshToken, process.env.REFRESH_SECRET_KEY, async (err, payload) => {
             if (err) {
                 const message = err.name === 'JsonWebTokenError' ? 'Unauthorized' : err.message;
                 reject(new Error(message));
             } else {
                 console.log(payload.user)
-                const savedToken = RedisClient.get(payload.user, (err,reply) => {
+                const savedToken = await RedisClient.get(payload.user, (err,reply) => {
                     if(err){
                         console.log('internal server error')
                     }else{
                         console.log(reply)
                     }
                 })
-                console.log("savedToken : ",savedToken)
+                // console.log("savedToken : ",savedToken)
                 if(refreshToken !== savedToken){
                     reject(new Error('Unauthorized Token'))
                 }else{

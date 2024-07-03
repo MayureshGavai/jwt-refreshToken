@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs'
 import { addNewUser, getAllUsers, loginNewUser } from "../model/auth.model.js";
 import { verifyRefreshToken } from '../middleware/auth.middleware.js';
 import { signAccessToken, signRefreshToken } from '../utils/generateToken.js';
+import RedisClient from '../config/redis.js';
 
 export const fetchAllUsers = async (req, res) => {
     try {
@@ -56,7 +57,6 @@ export const loginUser = async (req,res) => {
 export const generateRefreshToken = async(req,res) => {
     try{
         const { refreshToken } = req.body;
-        console.log(refreshToken)
         if (!refreshToken) {
             return res.status(400).send('Bad Request: Refresh Token is required');
         }
@@ -65,10 +65,36 @@ export const generateRefreshToken = async(req,res) => {
         const newAccessToken = await signAccessToken(username);
         const newRefreshToken = await signRefreshToken(username);
 
+        console.log('Tokens generated:', { newAccessToken, newRefreshToken });
+
+
         res.send({ newAccessToken, newRefreshToken });
 
     }catch(err){
         console.log(err)
         res.status(500).json({error : 'Failed to create refresh token'})
+    }
+}
+
+
+export const logoutUser = async (req,res) => {
+    try {
+        const {refreshToken} = req.body
+        if(!refreshToken){
+            return res.status(400).send('Bad Request: Refresh Token is required');
+        }
+        const username = await verifyRefreshToken(refreshToken)
+        RedisClient.del(username, (err,reply)=>{
+            if(err){
+                console.log('internal server error')
+            }else{
+                console.log(reply)
+            }
+        })
+        res.status(200).json({message: 'User logout successfully'})
+
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({error : 'Failed to create refresh token'})        
     }
 }

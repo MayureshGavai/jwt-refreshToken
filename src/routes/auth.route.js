@@ -1,5 +1,5 @@
 import express from 'express'
-import { addUser, fetchAllUsers, generateRefreshToken, loginUser } from '../controller/auth.controller.js'
+import { addUser, fetchAllUsers, generateRefreshToken, loginUser, logoutUser } from '../controller/auth.controller.js'
 
 const router = express.Router()
 
@@ -16,8 +16,6 @@ router.post('/login',loginUser)
 
 router.post('/refreshtoken',generateRefreshToken)
 
-router.delete('/logout',async(req,res,next)=>{
-    res.send('delete route')
-})
+router.delete('/logout',logoutUser)
 
 export default router
