@@ -4,7 +4,9 @@ import RedisClient from '../config/redis.js';
 
 export const verifyAccessToken = (req, res, next) => {
     if (!req.headers['authorization']) {
-        return res.status(401).send('Not Authorized');
+        req.isAuthenticated = false;
+        // return res.status(401).send('Not Authorized');
+        return next()
     }
 
     const authHeader = req.headers['authorization'];
@@ -16,8 +18,10 @@ export const verifyAccessToken = (req, res, next) => {
     JWT.verify(token, process.env.ACCESS_SECRET_KEY, (err, payload) => {
         if (err) {
             const message = err.name === 'JsonWebTokenError' ? 'Unauthorized' : err.message
+            req.isAuthenticated = false
             return res.status(401).send(message);
         } else {
+            req.isAuthenticated = true;
             req.payload = payload;
             next();
         }

@@ -3,9 +3,6 @@ import { addUser, fetchAllUsers, generateRefreshToken, loginUser, logoutUser } f
 
 const router = express.Router()
 
-// router.get('/all',async(req,res,next) => {
-//     res.send(fetchAllUsers)
-// })
 
 router.get('/all',fetchAllUsers)
 
@@ -13,6 +10,7 @@ router.post('/adduser',addUser)
 
 
 router.post('/login',loginUser)
+
 
 router.post('/refreshtoken',generateRefreshToken)
 

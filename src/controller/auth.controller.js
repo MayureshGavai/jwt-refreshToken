@@ -25,9 +25,10 @@ export const addUser = async (req,res) => {
             email : req.body.email,
             password : hashedPassword
         }
-        const rowAffected = await addNewUser(user)
-        res.status(201).json({message : 'User added successfully', rowAffected })
-
+        console.log(user)
+        // const rowAffected = await addNewUser(user)
+        // res.status(201).json({message : 'User added successfully', rowAffected })
+        res.redirect('/login')
     }catch(err){
         res.status(500).json({ error: 'Failed to add user data' });
     }
@@ -39,6 +40,7 @@ export const loginUser = async (req,res) => {
         const username = req.body.username;
         const password = req.body.password;
 
+        console.log(username, password)
         if (!username || !password) {
             return res.status(400).send('Email and password are required');
         }
@@ -46,8 +48,11 @@ export const loginUser = async (req,res) => {
         const { accessToken, refreshToken } = await loginNewUser(username, password);
 
         console.log('Tokens generated:', { accessToken, refreshToken });
-
-        res.send({ accessToken, refreshToken });
+        res.cookie('access-token', accessToken,{
+            httpOnly: true,
+        })
+        // res.send({ accessToken, refreshToken });
+        return res.redirect('/')
     } catch (err) {
         console.error('Error in loginUser:', err);
         res.status(500).json({ error: 'Failed to login user' });

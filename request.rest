@@ -1,5 +1,5 @@
 GET http://localhost:3000
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoibWF5dXJlc2giLCJpYXQiOjE3MjAwMTAxNzEsImV4cCI6MTcyMDAxMTA3MX0.DheoSoE81lmCli7EutdmnjwqkyG2HSx5LseUvoGG8TU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoibWF5dXJlc2giLCJpYXQiOjE3MjAwMTM3MDIsImV4cCI6MTcyMDAxNDYwMn0.vT8prcWo2YxPhN-87nhD8Z6KnUoE-moHRntzObj7aRk
 
 ### Fetch All Users
 GET http://localhost:3000/auth/all
@@ -29,7 +29,7 @@ POST http://localhost:3000/auth/refreshtoken
 Content-Type: application/json
 
 {
-    "refreshToken" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoibWF5dXJlc2giLCJpYXQiOjE3MjAwMTA4NDIsImV4cCI6MTcyMTMwNjg0Mn0.BHXgxjG2itcsWLmWTcTLjYJm6nMiNAp7RDhrvaTj4WE"
+    "refreshToken" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoibWF5dXJlc2giLCJpYXQiOjE3MjAwMTM3MDIsImV4cCI6MTcyMTMwOTcwMn0.n-NyKAsMNaHml8G8W7dPR5Qz0Y-P9Y2n59mCD0c7Jis"
 }
 
 ### Logout User
@@ -37,31 +37,5 @@ DELETE http://localhost:3000/auth/logout
 Content-Type : application/json
 
 {
-    "refreshToken" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoibWF5dXJlc2giLCJpYXQiOjE3MjAwMTA5NzAsImV4cCI6MTcyMTMwNjk3MH0.GjKaBwXXfNv4ayvjThe4g76CEpylaU6WWlNpiFGu2y8"
-}
-
-### Login
-POST http://localhost:3000/auth/login    
-
-### Refresh token
-POST http://localhost:3000/auth/refresh-token    
-
-### logout
-DELETE http://localhost:3000/auth/logout        
-
-###
-GET http://localhost:3000/students/all
-
-### 
-POST http://localhost:3000/students/newStudent
-Content-Type: application/json
-
-{
-    "fname": "Mayuresh",
-    "lname": "Gavai",
-    "phone": "678-412-2345",
-    "address": "ABC Cedar Street, Dubai",
-    "course": "Computer Engineering",
-    "div": "C",
-    "acad_year": 2022
+    "refreshToken" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoibWF5dXJlc2giLCJpYXQiOjE3MjAwMTM3ODMsImV4cCI6MTcyMTMwOTc4M30.RfNnTTOyo7gwQXL8MaNK4RxACWwJDeo5T4ClPIFK3gs"
 }
