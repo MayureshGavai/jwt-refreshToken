@@ -35,7 +35,7 @@ export const signRefreshToken = async (username) => {
         };
         const secret = process.env.REFRESH_SECRET_KEY;
         const options = {
-            // expiresIn: '30d',
+            expiresIn: '15d',
         };
 
         const expirationTimeInSeconds = 15 * 24 * 60 * 60
@@ -45,15 +45,10 @@ export const signRefreshToken = async (username) => {
                 if (err) {
                     reject(err);
                 } else {
-                    RedisClient.SET(username, token, 'EX', expirationTimeInSeconds, (err, reply) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            console.log('Hello WOrld')
-                            console.log('Refresh token stored in Redis:', reply);
-                        }
-                    });
-                    resolve(token); // Resolve with the token
+                    RedisClient.set(username, token,{
+                        EX : expirationTimeInSeconds
+                    })
+                    resolve(token); // Resolve with the token only after storing it in Redis
                 }
             });
         });
