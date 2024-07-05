@@ -17,6 +17,20 @@ export const getAllUsers = async () => {
     }
 }
 
+export const getUser = async (username) => {
+    try {
+        const pool = await poolConnect
+        const result = await pool.request()
+            .input('username',sql.NVarChar, username)
+            .query(`SELECT * FROM Users WHERE username = @username`)        
+        return result.recordset[0]
+    } catch (err) {
+        console.error('Database query error:', err);
+        throw err
+    }
+}
+
+
 export const addNewUser = async (user) => {
     try {
         

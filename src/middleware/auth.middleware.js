@@ -1,5 +1,33 @@
 import JWT from 'jsonwebtoken'
 import RedisClient from '../config/redis.js';
+import { configDotenv } from 'dotenv';
+
+configDotenv()
+
+export const verifyAccessTokenFromCookies = (req, res, next) => {
+    const token = req.cookies.accessToken;
+    if (!token) {
+        console.log('no token')
+        req.isAuthenticated = false
+        return next()
+        // return res.redirect('/login');
+    }
+
+    JWT.verify(token, process.env.ACCESS_SECRET_KEY, (err, user) => {
+        if(err) {
+            console.log('err occured : ', err)
+            res.clearCookie('accessToken');
+            req.isAuthenticated = false
+            return next()
+            // return res.redirect('/login');
+        }else{
+            req.isAuthenticated = true
+            req.user = user;
+            // console.log(user)
+            next();
+        }
+    });
+};
 
 
 export const verifyAccessToken = (req, res, next) => {
@@ -13,7 +41,7 @@ export const verifyAccessToken = (req, res, next) => {
     const bearerToken = authHeader.split(" ");
     const token = bearerToken[1];
     
-    console.log("Access Token : ",token)
+    // console.log("Access Token : ",token)
 
     JWT.verify(token, process.env.ACCESS_SECRET_KEY, (err, payload) => {
         if (err) {
@@ -61,3 +89,4 @@ export const verifyRefreshToken = (refreshToken) => {
         });
     });
 }
+

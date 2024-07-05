@@ -29,19 +29,21 @@
                         <div class="col-md-8 card p-5">
                             <h1 class="fs-2 mb-4">Sign In</h1>
                             <p class="mb-4 fs-6 fw-light text-body-secondary">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                        <form method="post" action="/login">
+                        <form id="loginForm" method="post" action="/login">
                             <div class="mb-3">
                                 <label for="" class="mb-1">Username</label>
-                                <input class="w-100 p-1 px-2 fs-5 rounded-2" name="username" type="text">
+                                <input class="w-100 p-1 px-2 fs-5 rounded-2" name="username" id="username" type="text">
                             </div>
                             <div class="mb-3">
                                 <label for="" class="mb-1">Password</label>
-                                <input class="w-100 p-1 px-2 fs-5 rounded-2" name="password" type="password">
+                                <input class="w-100 p-1 px-2 fs-5 rounded-2" name="password" id="password" type="password">
                             </div>
                             <div class="mb-3 d-flex justify-content-end">
                                 <a class="text-body-secondary fs-6" href="">Forgot Password?</a>
                             </div>
-                            <button class="mb-5 w-100 p-2 fs-5 text-white btn" style="background-color: #557aec;">Signin</button>
+                            <button class="mb-1 w-100 p-2 fs-5 text-white btn" style="background-color: #557aec;">Signin</button>
+                            <button onclick="guestLogin()" class="mb-4 w-100 p-2 fs-5 text-white btn" style="background-color: #28a745;">Guest</button>
+                            
                         </form>
                         <a class="text-center text-body-secondary" href="/register">Don't have account? Signup</a>
                         </div>
@@ -54,5 +56,12 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+    <script>
+        const guestLogin = () => {
+            document.getElementById('username').value = 'mayuresh'
+            document.getElementById('password').value = 'mayuresh'
+            document.getElementById('loginForm').submit()
+        }
+    </script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs'
-import { addNewUser, getAllUsers, loginNewUser } from "../model/auth.model.js";
+import { addNewUser, getAllUsers, getUser, loginNewUser } from "../model/auth.model.js";
 import { verifyRefreshToken } from '../middleware/auth.middleware.js';
 import { signAccessToken, signRefreshToken } from '../utils/generateToken.js';
 import RedisClient from '../config/redis.js';
@@ -13,13 +13,22 @@ export const fetchAllUsers = async (req, res) => {
     }
 }
 
+export const fetchUser = async (req,res) => {
+    try {
+        const username = req.body.username
+        console.log(req.isAuthenticated)
+        const user = await getUser(username)
+        res.status(200).json(user)
+    } catch (err) {
+        res.status(500).json({error : 'Failed to fetch users data'})
+    }
+}
 
 export const addUser = async (req,res) => {
     try{
         const password = req.body.password
         const salt = await bcrypt.genSalt(10)
         const hashedPassword = await bcrypt.hash(password,salt)
-
         const user = {
             username : req.body.username, 
             email : req.body.email,
@@ -42,14 +51,17 @@ export const loginUser = async (req,res) => {
 
         console.log(username, password)
         if (!username || !password) {
-            return res.status(400).send('Email and password are required');
+            return res.status(400).send('Username and password are required');
         }
 
         const { accessToken, refreshToken } = await loginNewUser(username, password);
 
         console.log('Tokens generated:', { accessToken, refreshToken });
-        res.cookie('access-token', accessToken,{
-            httpOnly: true,
+        res.cookie('accessToken', accessToken,{
+            httpOnly: false,
+            secure : false,
+            sameSite : false,
+            path : '/'
         })
         // res.send({ accessToken, refreshToken });
         return res.redirect('/')
