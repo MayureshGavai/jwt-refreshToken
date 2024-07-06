@@ -9,7 +9,7 @@ export const signAccessToken = async (username) => {
         const secret = process.env.ACCESS_SECRET_KEY; // Ensure this key matches across your application
         
         const options = {
-            expiresIn: '15m',
+            expiresIn: '60s',
         };
 
         return new Promise((resolve, reject) => {
@@ -45,7 +45,7 @@ export const signRefreshToken = async (username) => {
                 if (err) {
                     reject(err);
                 } else {
-                    RedisClient.set(username, token,{
+                    RedisClient.set('refreshToken', token,{
                         EX : expirationTimeInSeconds
                     })
                     resolve(token); // Resolve with the token only after storing it in Redis

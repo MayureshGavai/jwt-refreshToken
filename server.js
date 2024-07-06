@@ -5,7 +5,7 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 import { fileURLToPath } from 'url';
 import authRoute from './src/routes/auth.route.js';
-import { verifyAccessToken, verifyAccessTokenFromCookies } from './src/middleware/auth.middleware.js';
+import { checkAccessTokenisPresent, verifyAccessTokenFromCookies } from './src/middleware/auth.middleware.js';
 
 configDotenv();
 
@@ -26,10 +26,13 @@ const PORT = process.env.PORT || 3000;
 
 app.use('/', authRoute);
 
-app.get('/', verifyAccessTokenFromCookies, (req, res) => {
-    res.render('index', { user: req.user });
-});
+// app.get('/', verifyAccessTokenFromCookies, (req, res) => {
+//     res.render('index', { user: req.user });
+// });
 
+app.get('/',checkAccessTokenisPresent, (req,res)=>{
+    res.render('index')
+})
 
 app.get('/login', (req, res) => {
     res.render('login');

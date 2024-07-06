@@ -16,7 +16,6 @@ export const fetchAllUsers = async (req, res) => {
 export const fetchUser = async (req,res) => {
     try {
         const username = req.body.username
-        console.log(req.isAuthenticated)
         const user = await getUser(username)
         res.status(200).json(user)
     } catch (err) {

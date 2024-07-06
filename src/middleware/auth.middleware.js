@@ -1,30 +1,71 @@
 import JWT from 'jsonwebtoken'
 import RedisClient from '../config/redis.js';
 import { configDotenv } from 'dotenv';
+import { signAccessToken, signRefreshToken } from '../utils/generateToken.js';
 
 configDotenv()
 
-export const verifyAccessTokenFromCookies = (req, res, next) => {
+export const checkAccessTokenisPresent = (req, res, next) => {
     const token = req.cookies.accessToken;
     if (!token) {
-        console.log('no token')
+        console.log('no token in cookies')
         req.isAuthenticated = false
-        return next()
-        // return res.redirect('/login');
+        return res.redirect('/login');
     }
+    else {
+        next()
+    }
+}
 
-    JWT.verify(token, process.env.ACCESS_SECRET_KEY, (err, user) => {
-        if(err) {
-            console.log('err occured : ', err)
-            res.clearCookie('accessToken');
-            req.isAuthenticated = false
-            return next()
-            // return res.redirect('/login');
-        }else{
-            req.isAuthenticated = true
-            req.user = user;
-            // console.log(user)
-            next();
+export const verifyAccessTokenFromCookies = (req, res, next) => {
+    const token = req.cookies.accessToken;
+
+    JWT.verify(token, process.env.ACCESS_SECRET_KEY, async (err, user) => {
+        if (err) {
+            if (err.name == 'TokenExpiredError') {
+                // console.log(err)
+                const refreshToken = await RedisClient.get('refreshToken', (err, reply) => {
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        console.log(reply)
+                    }
+                })
+
+                console.log('refreshToken :',refreshToken)
+
+                if (!refreshToken) {
+                    // res.clearCookie('accessToken')
+                    console.log('no refreshToken is present')
+                    return res.redirect('/login')
+                }
+
+                const username = await verifyRefreshToken(refreshToken);
+                const newAccessToken = await signAccessToken(username);
+                const newRefreshToken = await signRefreshToken(username);
+                
+
+
+                res.cookie('accessToken', newAccessToken, {
+                    httpOnly: false,
+                    secure: false,
+                    sameSite: false,
+                    path: '/'
+                })
+
+                console.log('New Tokens generated:', { newAccessToken, newRefreshToken });
+                return next()
+            }
+            else if(err.name === 'JsonWebTokenError'){
+                console.log('no token available in cookies')
+                return res.redirect('/login');
+                
+            }else {
+                console.log('err occured : ', err)
+                return next()
+            }
+        } else {
+            console.log('hello')
         }
     });
 };
@@ -40,7 +81,7 @@ export const verifyAccessToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const bearerToken = authHeader.split(" ");
     const token = bearerToken[1];
-    
+
     // console.log("Access Token : ",token)
 
     JWT.verify(token, process.env.ACCESS_SECRET_KEY, (err, payload) => {
@@ -72,17 +113,17 @@ export const verifyRefreshToken = (refreshToken) => {
                 reject(new Error(message));
             } else {
                 console.log(payload.user)
-                const savedToken = await RedisClient.get(payload.user, (err,reply) => {
-                    if(err){
+                const savedToken = await RedisClient.get('refreshToken', (err, reply) => {
+                    if (err) {
                         console.log('internal server error')
-                    }else{
+                    } else {
                         console.log(reply)
                     }
                 })
                 // console.log("savedToken : ",savedToken)
-                if(refreshToken !== savedToken){
+                if (refreshToken !== savedToken) {
                     reject(new Error('Unauthorized Token'))
-                }else{
+                } else {
                     resolve(payload.user); // Assuming the payload contains the username as `user`
                 }
             }
