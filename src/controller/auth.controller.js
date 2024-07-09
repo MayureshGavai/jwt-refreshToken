@@ -35,7 +35,7 @@ export const addUser = async (req,res) => {
             password : hashedPassword
         }
         console.log(user)
-        // const rowAffected = await addNewUser(user)
+        const rowAffected = await addNewUser(user)
         // res.status(201).json({message : 'User added successfully', rowAffected })
         res.redirect('/login')
     }catch(err){

@@ -16,7 +16,7 @@ const config = {
     options: {
         encrypt: true, // Use encryption if required (Azure, etc.)
         trustServerCertificate: true, // Trust the self-signed certificate
-        enableArithAbort: true // Required for recent SQL Server versions
+        // enableArithAbort: true // Required for recent SQL Server versions
     }
 };
 
