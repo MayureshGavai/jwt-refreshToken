@@ -87,13 +87,20 @@
         };
 
         const logoutUser = async () => {
-            // const response = await fetch('/logout',{
-            //     method : 'POST',
-            //     headers : {
-            //         'Content-Type': 'application/json' // Correct header key
-            //     }
-            // })
-            console.log('logout')
+            try {
+                const response = await fetch('/logout', {
+                    method: 'GET',
+                    credentials: 'same-origin' // This ensures cookies are included in the request
+                });
+                console.log(response)
+                if (response.redirected) {
+                    window.location.href = response.url;
+                } else {
+                    console.error('Logout failed');
+                }
+            } catch (error) {
+                console.error('Error during logout:', error);
+            }
         }
     </script>
 </body>
