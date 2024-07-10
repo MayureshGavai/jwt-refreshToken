@@ -9,7 +9,7 @@ export const checkAccessTokenisPresent = (req, res, next) => {
     const token = req.cookies.accessToken;
     if (!token) {
         console.log('no token in cookies')
-        req.isAuthenticated = false
+        // req.isAuthenticated = false
         return res.redirect('/login');
     }
     else {
@@ -17,44 +17,42 @@ export const checkAccessTokenisPresent = (req, res, next) => {
     }
 }
 
-export const verifyAccessTokenFromCookies = (req, res, next) => {
+export const verifyAccessTokenFromCookies = async (req, res, next) => {
     const token = req.cookies.accessToken;
 
     JWT.verify(token, process.env.ACCESS_SECRET_KEY, async (err, user) => {
         if (err) {
             if (err.name == 'TokenExpiredError') {
                 // console.log(err)
-                const refreshToken = await RedisClient.get('refreshToken', (err, reply) => {
-                    if (err) {
-                        console.log(err)
-                    } else {
-                        console.log(reply)
-                    }
-                })
+                const refreshToken = await RedisClient.get('refreshToken')
 
                 console.log('refreshToken :',refreshToken)
 
-                if (!refreshToken) {
+                if (refreshToken === null) {
                     // res.clearCookie('accessToken')
                     console.log('no refreshToken is present')
-                    return res.redirect('/login')
+                    res.redirect('/login')
+                    
+
+                }else{
+                    const username = await verifyRefreshToken(refreshToken);
+                    const newAccessToken = await signAccessToken(username);
+                    const newRefreshToken = await signRefreshToken(username);
+                    
+    
+    
+                    res.cookie('accessToken', newAccessToken, {
+                        httpOnly: false,
+                        secure: false,
+                        sameSite: false,
+                        path: '/'
+                    })
+    
+                    console.log('New Tokens generated:', { newAccessToken, newRefreshToken });
+                    
+                    return next()
                 }
 
-                const username = await verifyRefreshToken(refreshToken);
-                const newAccessToken = await signAccessToken(username);
-                const newRefreshToken = await signRefreshToken(username);
-                
-
-
-                res.cookie('accessToken', newAccessToken, {
-                    httpOnly: false,
-                    secure: false,
-                    sameSite: false,
-                    path: '/'
-                })
-
-                console.log('New Tokens generated:', { newAccessToken, newRefreshToken });
-                return next()
             }
             else if(err.name === 'JsonWebTokenError'){
                 console.log('no token available in cookies')
@@ -62,10 +60,11 @@ export const verifyAccessTokenFromCookies = (req, res, next) => {
                 
             }else {
                 console.log('err occured : ', err)
-                return next()
+                // return next()
             }
         } else {
-            console.log('hello')
+            console.log('moving to controller')
+            return next()
         }
     });
 };
@@ -103,7 +102,8 @@ export const verifyRefreshToken = (refreshToken) => {
     // console.log("refreshToken : ",refreshToken)
 
     if (!refreshToken) {
-        return res.status(400).send('Refresh Token is required');
+        // return res.redirect('/login')
+        return res.status(400).ssend('Refresh Token is required');
     }
 
     return new Promise((resolve, reject) => {

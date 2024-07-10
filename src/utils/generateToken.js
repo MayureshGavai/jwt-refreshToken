@@ -38,7 +38,8 @@ export const signRefreshToken = async (username) => {
             expiresIn: '15d',
         };
 
-        const expirationTimeInSeconds = 15 * 24 * 60 * 60
+        // const expirationTimeInSeconds = 15 * 24 * 60 * 60
+        const expirationTimeInSeconds = 120
 
         return new Promise((resolve, reject) => {
             JWT.sign(payload, secret, options, (err, token) => {
